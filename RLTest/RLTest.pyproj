@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>c2e0f9d9-f339-43a3-8b23-e06ab1984b7c</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>RLTest.py</StartupFile>
+    <StartupFile>CartPole-DQNAgent.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,7 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="RLTest.py" />
+    <Compile Include="CartPole-DQNAgent.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="RLenv\">
