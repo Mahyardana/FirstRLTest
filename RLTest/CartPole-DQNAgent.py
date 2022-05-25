@@ -17,7 +17,7 @@ from tf_agents.trajectories import time_step
 
 imageio.plugins.ffmpeg.download()
 
-num_iterations = 200000  # @param {type:"integer"}
+num_iterations = 20000  # @param {type:"integer"}
 
 initial_collect_steps = 100  # @param {type:"integer"}
 collect_steps_per_iteration = 1  # @param {type:"integer"}
@@ -25,10 +25,10 @@ replay_buffer_max_length = 100000  # @param {type:"integer"}
 
 batch_size = 64  # @param {type:"integer"}
 learning_rate = 1e-3  # @param {type:"number"}
-log_interval = 2000  # @param {type:"integer"}
+log_interval = 200  # @param {type:"integer"}
 
 num_eval_episodes = 10  # @param {type:"integer"}
-eval_interval = 10000  # @param {type:"integer"}
+eval_interval = 1000  # @param {type:"integer"}
 
 env_name = "CartPole-v0"
 env = suite_gym.load(env_name)
@@ -108,12 +108,11 @@ def compute_avg_return(environment, policy, num_episodes=10):
 # https://github.com/tensorflow/agents/tree/master/tf_agents/metrics
 
 data_spec = agent.collect_data_spec
-batch_size=train_env.batch_size
 max_length = 100000
 
 
 replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
-    data_spec, batch_size=batch_size, max_length=max_length
+    data_spec, batch_size=1, max_length=max_length
 )
 
 replay_observer = [replay_buffer.add_batch]
@@ -137,11 +136,11 @@ returns = [avg_return]
 # Reset the environment.
 time_step = train_env.reset()
 
-policy = py_tf_eager_policy.PyTFEagerPolicy(agent.collect_policy, use_tf_function=True,batch_time_steps=False)
+policy = py_tf_eager_policy.PyTFEagerPolicy(agent.collect_policy, use_tf_function=True)
 
 collect_driver = py_driver.PyDriver(
     train_env,
-    policy,
+    agent.collect_policy,
     replay_observer,
     max_steps=collect_steps_per_iteration,
 )
@@ -179,4 +178,4 @@ for _ in range(num_iterations):
         avg_return = compute_avg_return(eval_env, agent.policy, num_eval_episodes)
         print("step = {0}: Average Return = {1}".format(step, avg_return))
         returns.append(avg_return)
-        create_policy_eval_video(agent.policy, "trained-agent{}".format(step))
+        # create_policy_eval_video(agent.policy, "trained-agent{}".format(step))
