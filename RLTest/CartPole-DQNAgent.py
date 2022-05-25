@@ -112,7 +112,7 @@ max_length = 100000
 
 
 replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
-    data_spec, batch_size=1, max_length=max_length
+    data_spec, batch_size=train_env.batch_size, max_length=max_length
 )
 
 replay_observer = [replay_buffer.add_batch]
@@ -136,11 +136,11 @@ returns = [avg_return]
 # Reset the environment.
 time_step = train_env.reset()
 
-policy = py_tf_eager_policy.PyTFEagerPolicy(agent.collect_policy, use_tf_function=True)
+policy = py_tf_eager_policy.PyTFEagerPolicy(agent.collect_policy, use_tf_function=True,batch_time_steps=False)
 
 collect_driver = py_driver.PyDriver(
     train_env,
-    agent.collect_policy,
+    policy,
     replay_observer,
     max_steps=collect_steps_per_iteration,
 )
